@@ -1,0 +1,391 @@
+/* MotoCity - Simple and Clean Stylesheet */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background-color: #f4f4f4;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Header */
+header {
+    background-color: #2c3e50;
+    color: white;
+    padding: 1.5rem 0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+/* Navigation */
+nav {
+    background-color: #34495e;
+    padding: 0;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.08);
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+nav ul li {
+    margin: 0;
+}
+
+nav ul li a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 0.9rem 1.2rem;
+    transition: background-color 0.2s;
+    font-size: 0.95rem;
+}
+
+nav ul li a:hover {
+    background-color: #2c3e50;
+}
+
+nav ul li a.active {
+    background-color: #1abc9c;
+}
+
+/* Main Content */
+main {
+    background-color: white;
+    margin: 2rem auto 3rem auto;
+    padding: 2rem;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    min-height: 500px;
+}
+
+h2 {
+    color: #2c3e50;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #e0e0e0;
+    padding-bottom: 0.75rem;
+    font-weight: 600;
+}
+
+h3 {
+    color: #34495e;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+/* Forms */
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="number"],
+input[type="datetime-local"],
+select,
+textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="tel"]:focus,
+input[type="number"]:focus,
+input[type="datetime-local"]:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: #1abc9c;
+}
+
+textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background-color: #1abc9c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 1rem;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #16a085;
+}
+
+.btn-secondary {
+    background-color: #95a5a6;
+}
+
+.btn-secondary:hover {
+    background-color: #7f8c8d;
+}
+
+.btn-danger {
+    background-color: #e74c3c;
+}
+
+.btn-danger:hover {
+    background-color: #c0392b;
+}
+
+.btn-small {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+
+/* Messages */
+.message {
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 4px;
+    border-left: 4px solid;
+}
+
+.message.success {
+    background-color: #d4edda;
+    border-color: #28a745;
+    color: #155724;
+}
+
+.message.error {
+    background-color: #f8d7da;
+    border-color: #dc3545;
+    color: #721c24;
+}
+
+.message.info {
+    background-color: #d1ecf1;
+    border-color: #17a2b8;
+    color: #0c5460;
+}
+
+.message.warning {
+    background-color: #fff3cd;
+    border-color: #ffc107;
+    color: #856404;
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+table th,
+table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #34495e;
+    color: white;
+    font-weight: bold;
+}
+
+table tr:hover {
+    background-color: #f8f9fa;
+}
+
+table td a {
+    color: #1abc9c;
+    text-decoration: none;
+    margin-right: 0.5rem;
+}
+
+table td a:hover {
+    text-decoration: underline;
+}
+
+/* Cards */
+.card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.card h3 {
+    margin-top: 0;
+}
+
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+/* Notification Box */
+.notification-box {
+    background-color: #e8f5e9;
+    border: 2px solid #4caf50;
+    border-radius: 4px;
+    padding: 1.5rem;
+    margin: 1.5rem 0;
+}
+
+.notification-box h3 {
+    color: #2e7d32;
+    margin-top: 0;
+}
+
+.notification-box p {
+    margin: 0.5rem 0;
+    font-size: 1.1rem;
+}
+
+.notification-box strong {
+    color: #1b5e20;
+}
+
+/* Search Form */
+.search-form {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: 4px;
+    margin-bottom: 2rem;
+}
+
+
+/* Utility Classes */
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.mt-1 { margin-top: 1rem; }
+.mt-2 { margin-top: 2rem; }
+.mb-1 { margin-bottom: 1rem; }
+.mb-2 { margin-bottom: 2rem; }
+
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.85rem;
+    border-radius: 3px;
+    font-weight: bold;
+}
+
+.badge-success {
+    background-color: #28a745;
+    color: white;
+}
+
+.badge-warning {
+    background-color: #ffc107;
+    color: #333;
+}
+
+.badge-danger {
+    background-color: #dc3545;
+    color: white;
+}
+
+.badge-info {
+    background-color: #17a2b8;
+    color: white;
+}
+
+/* Welcome Page */
+.welcome-hero {
+    text-align: center;
+    padding: 3rem 0;
+}
+
+.welcome-hero h2 {
+    font-size: 2.5rem;
+    border: none;
+    margin-bottom: 1rem;
+}
+
+.welcome-features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.feature-box {
+    text-align: center;
+    padding: 2rem;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+}
+
+.feature-box h3 {
+    color: #1abc9c;
+    margin-top: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    nav ul {
+        flex-direction: column;
+    }
+    
+    nav ul li a {
+        padding: 0.75rem 1rem;
+    }
+    
+    .card-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    table {
+        font-size: 0.9rem;
+    }
+    
+    table th,
+    table td {
+        padding: 0.5rem;
+    }
+}

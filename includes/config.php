@@ -13,7 +13,7 @@ define('DB_PASS', '');
 
 // Application settings
 define('SITE_NAME', 'MotoCity');
-define('BASE_URL', 'http://localhost/motocity');
+define('BASE_URL', 'http://localhost/ISIT307-A2');
 
 // Password hashing method
 // Set to 'password_hash' (recommended) or 'md5' (for lab compatibility)

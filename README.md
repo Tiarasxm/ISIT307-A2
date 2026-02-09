@@ -32,7 +32,7 @@ MotoCity is a motorbike rental management system that allows users to browse, se
 ## 📁 Project Structure
 
 ```
-motocity/
+ISIT307-A2/
 ├── assets/
 │   └── css/
 │       └── style.css              # Application stylesheet
@@ -63,6 +63,7 @@ motocity/
 ├── users_list.php                 # List users (admin only)
 ├── user_search.php                # Search users (admin only)
 ├── schema.sql                     # Database schema with seed data
+├── report_template.md             # Assignment report template
 └── README.md                      # This file
 ```
 
@@ -108,23 +109,23 @@ motocity/
 ### Step 3: Run the Application
 
 #### Option A: Using XAMPP/MAMP/WAMP
-1. Copy the `motocity` folder to your web server's document root:
-   - XAMPP: `C:\xampp\htdocs\motocity` (Windows) or `/Applications/XAMPP/htdocs/motocity` (Mac)
-   - MAMP: `/Applications/MAMP/htdocs/motocity`
-   - WAMP: `C:\wamp64\www\motocity`
+1. Copy the `ISIT307-A2` folder to your web server's document root:
+   - XAMPP: `C:\xampp\htdocs\ISIT307-A2` (Windows) or `/Applications/XAMPP/htdocs/ISIT307-A2` (Mac)
+   - MAMP: `/Applications/MAMP/htdocs/ISIT307-A2`
+   - WAMP: `C:\wamp64\www\ISIT307-A2`
 
 2. Start Apache and MySQL from your control panel
 
 3. Open your browser and navigate to:
    ```
-   http://localhost/motocity
+   http://localhost/ISIT307-A2
    ```
 
 #### Option B: Using PHP Built-in Server
 1. Open terminal/command prompt
-2. Navigate to the motocity directory:
+2. Navigate to the ISIT307-A2 directory:
    ```bash
-   cd /path/to/motocity
+   cd /path/to/ISIT307-A2
    ```
 
 3. Start the PHP server:

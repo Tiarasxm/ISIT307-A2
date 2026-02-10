@@ -27,6 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $name = sanitizeString($_POST['name'] ?? '');
     $surname = sanitizeString($_POST['surname'] ?? '');
     $phone = sanitizeString($_POST['phone'] ?? '');
+    // Prepend +65 to phone number
+    $phone = '+65' . $phone;
     $email = sanitizeString($_POST['email'] ?? '');
     $type = sanitizeString($_POST['type'] ?? '');
     $password = $_POST['password'] ?? '';
@@ -169,7 +171,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         <div class="form-group">
             <label for="phone">Phone *</label>
-            <input type="tel" id="phone" name="phone" value="<?php echo isset($phone) ? htmlspecialchars($phone) : ''; ?>" placeholder="e.g., +1234567890" required>
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+                <span style="padding: 0.75rem; background-color: var(--color-light); border: 1px solid #ddd; border-radius: 4px; font-weight: 500;">+65</span>
+                <input type="tel" id="phone" name="phone" value="<?php echo isset($phone) ? htmlspecialchars(str_replace('+65', '', $phone)) : ''; ?>" placeholder="e.g., 91234568" pattern="[0-9]{8}" maxlength="8" required style="flex: 1;">
+            </div>
         </div>
         
         <div class="form-group">

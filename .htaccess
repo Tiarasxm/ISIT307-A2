@@ -1,0 +1,7 @@
+Options +FollowSymLinks
+DirectoryIndex index.php
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /ISIT307-A2/
+</IfModule>

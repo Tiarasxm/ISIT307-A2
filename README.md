@@ -2,11 +2,11 @@
 
 A complete OOP PHP + MySQL web application for managing motorbike rentals with two user types: Administrator and User.
 
-## 📋 Project Overview
+##Project Overview
 
 MotoCity is a motorbike rental management system that allows users to browse, search, rent, and return motorbikes from different locations in the city. Administrators can manage the motorbike inventory, handle rentals for users, and view comprehensive reports.
 
-## 🚀 Features
+## Features
 
 ### User Features
 - Register and login to the system
@@ -29,7 +29,7 @@ MotoCity is a motorbike rental management system that allows users to browse, se
 - Search users by name, surname, phone, or email
 - View all active and completed rentals system-wide
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 ISIT307-A2/
@@ -67,7 +67,7 @@ ISIT307-A2/
 └── README.md                      # This file
 ```
 
-## 🛠️ Installation & Setup
+## Installation & Setup
 
 ### Prerequisites
 - PHP 7.4 or higher
@@ -138,7 +138,7 @@ ISIT307-A2/
    http://localhost:8000
    ```
 
-## 🔐 Default Login Credentials
+## Default Login Credentials
 
 ### Administrator Account
 - **Email:** admin@motocity.com
@@ -176,7 +176,7 @@ ISIT307-A2/
 - `costPerHourAtStart` (DECIMAL)
 - `status` (ENUM: 'ACTIVE', 'COMPLETED')
 
-## 🔧 Technical Details
+## Technical Details
 
 ### Password Hashing
 - By default, uses PHP's `password_hash()` with PASSWORD_DEFAULT (bcrypt)
@@ -198,61 +198,6 @@ ISIT307-A2/
 - Multiple fields can be combined (AND logic)
 - Case-insensitive search
 
-## 🧪 Testing the Application
 
-### User Flow
-1. Register a new user account
-2. Login with credentials
-3. Browse available motorbikes
-4. Search for specific motorbikes
-5. Rent a motorbike (note the start time and cost per hour)
-6. View active rentals
-7. Return the motorbike (note the total cost)
-8. View rental history
-
-### Admin Flow
-1. Login with admin credentials
-2. Add new motorbikes
-3. Edit existing motorbikes
-4. View all motorbikes (all/available/rented filters)
-5. Search motorbikes
-6. Rent a motorbike for a specific user
-7. Return a motorbike for any user
-8. View all users
-9. Search users
-10. View users currently renting
-11. View all active and completed rentals
-
-## 📝 Notes
-
-- Payment processing is NOT included (as per requirements)
-- The application uses session-based authentication
-- All database queries use prepared statements for security
-- The UI is simple and clean, focusing on functionality
-- Code is well-commented for educational purposes
-
-## 🐛 Troubleshooting
-
-### Database Connection Error
-- Check MySQL is running
-- Verify database credentials in `config.php`
-- Ensure `motocity` database exists
-
-### Login Not Working
-- Clear browser cookies/session
-- Verify user exists in database
-- Check password hashing method matches
-
-### Pages Not Loading
-- Check file permissions (755 for directories, 644 for files)
-- Verify PHP version (7.4+)
-- Check Apache/PHP error logs
-
-## 📧 Support
-
-For issues or questions, please refer to the code comments or contact your instructor.
 
 ---
-
-**MotoCity** - Motorbike Rental Management System  
-Developed for ISIT307 Assignment

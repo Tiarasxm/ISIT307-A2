@@ -65,70 +65,47 @@ include 'includes/nav.php';
         <!-- Administrator Dashboard -->
         <h3>System Overview</h3>
         <div class="card-grid">
-            <div class="card">
+            <a href="motorbikes_list.php" class="card card-clickable">
                 <h3>Total Motorbikes</h3>
-                <p style="font-size: 2rem; color: #1abc9c; font-weight: bold;"><?php echo $totalMotorbikes; ?></p>
-                <a href="motorbikes_list.php" class="btn btn-small">View All</a>
-            </div>
+                <p style="font-size: 2rem; color: var(--color-accent); font-weight: bold;"><?php echo $totalMotorbikes; ?></p>
+            </a>
             
-            <div class="card">
+            <a href="motorbikes_list.php?filter=available" class="card card-clickable">
                 <h3>Available Motorbikes</h3>
-                <p style="font-size: 2rem; color: #27ae60; font-weight: bold;"><?php echo $availableMotorbikes; ?></p>
-                <a href="motorbikes_list.php?filter=available" class="btn btn-small">View Available</a>
-            </div>
+                <p style="font-size: 2rem; color: var(--color-accent); font-weight: bold;"><?php echo $availableMotorbikes; ?></p>
+            </a>
             
-            <div class="card">
+            <a href="motorbikes_list.php?filter=rented" class="card card-clickable">
                 <h3>Rented Motorbikes</h3>
-                <p style="font-size: 2rem; color: #e67e22; font-weight: bold;"><?php echo $rentedMotorbikes; ?></p>
-                <a href="motorbikes_list.php?filter=rented" class="btn btn-small">View Rented</a>
-            </div>
+                <p style="font-size: 2rem; color: var(--color-accent); font-weight: bold;"><?php echo $rentedMotorbikes; ?></p>
+            </a>
             
-            <div class="card">
+            <a href="rentals_current.php" class="card card-clickable">
                 <h3>Active Rentals</h3>
-                <p style="font-size: 2rem; color: #3498db; font-weight: bold;"><?php echo $activeRentals; ?></p>
-                <a href="rentals_current.php" class="btn btn-small">View Rentals</a>
-            </div>
-        </div>
-        
-        <h3>Quick Actions</h3>
-        <div class="mt-1">
-            <a href="motorbike_form.php" class="btn">Add New Motorbike</a>
-            <a href="rent.php" class="btn btn-secondary">Rent Motorbike for User</a>
-            <a href="return.php" class="btn btn-secondary">Return Motorbike</a>
-            <a href="users_list.php" class="btn btn-secondary">Manage Users</a>
+                <p style="font-size: 2rem; color: var(--color-accent); font-weight: bold;"><?php echo $activeRentals; ?></p>
+            </a>
         </div>
         
     <?php else: ?>
         <!-- User Dashboard -->
         <h3>My Rental Overview</h3>
         <div class="card-grid">
-            <div class="card">
+            <a href="motorbikes_list.php" class="card card-clickable">
                 <h3>Available Motorbikes</h3>
-                <p style="font-size: 2rem; color: #27ae60; font-weight: bold;"><?php echo $availableMotorbikes; ?></p>
-                <a href="motorbikes_list.php" class="btn btn-small">Browse Motorbikes</a>
-            </div>
+                <p style="font-size: 2rem; color: var(--color-accent); font-weight: bold;"><?php echo $availableMotorbikes; ?></p>
+            </a>
             
-            <div class="card">
+            <a href="rentals_current.php" class="card card-clickable">
                 <h3>My Active Rentals</h3>
-                <p style="font-size: 2rem; color: #e67e22; font-weight: bold;"><?php echo $myActiveRentals; ?></p>
-                <a href="rentals_current.php" class="btn btn-small">View Active</a>
-            </div>
+                <p style="font-size: 2rem; color: var(--color-accent); font-weight: bold;"><?php echo $myActiveRentals; ?></p>
+            </a>
             
-            <div class="card">
+            <a href="rentals_history.php" class="card card-clickable">
                 <h3>Completed Rentals</h3>
-                <p style="font-size: 2rem; color: #3498db; font-weight: bold;"><?php echo $myCompletedRentals; ?></p>
-                <a href="rentals_history.php" class="btn btn-small">View History</a>
-            </div>
+                <p style="font-size: 2rem; color: var(--color-accent); font-weight: bold;"><?php echo $myCompletedRentals; ?></p>
+            </a>
         </div>
         
-        <h3>Quick Actions</h3>
-        <div class="mt-1">
-            <a href="motorbikes_list.php" class="btn">Browse Available Motorbikes</a>
-            <a href="rent.php" class="btn btn-secondary">Rent a Motorbike</a>
-            <?php if ($myActiveRentals > 0): ?>
-                <a href="return.php" class="btn btn-secondary">Return a Motorbike</a>
-            <?php endif; ?>
-        </div>
     <?php endif; ?>
 </main>
 

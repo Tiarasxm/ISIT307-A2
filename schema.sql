@@ -73,24 +73,24 @@ CREATE TABLE rentals (
 
 INSERT INTO users (name, surname, phone, email, type, password) VALUES
 -- Administrator account
-('Admin', 'User', '+1234567890', 'admin@motocity.com', 'Administrator', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
+('Admin', 'Tan', '+6591234567', 'admin@motocity.com', 'Administrator', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
 
 -- Regular user accounts
-('John', 'Smith', '+1234567891', 'john.smith@example.com', 'User', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('Sarah', 'Johnson', '+1234567892', 'sarah.johnson@example.com', 'User', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('Michael', 'Brown', '+1234567893', 'michael.brown@example.com', 'User', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
-('Emily', 'Davis', '+1234567894', 'emily.davis@example.com', 'User', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi');
+('Wei Ming', 'Lim', '+6591234568', 'weiming.lim@example.com', 'User', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
+('Siti', 'Rahman', '+6591234569', 'siti.rahman@example.com', 'User', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
+('Raj', 'Kumar', '+6591234570', 'raj.kumar@example.com', 'User', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi'),
+('Mei Ling', 'Wong', '+6591234571', 'meiling.wong@example.com', 'User', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi');
 
 -- Insert Motorbikes
 INSERT INTO motorbikes (code, rentingLocation, description, costPerHour) VALUES
-('MB001', 'Downtown Station', 'Honda CBR500R - Sport bike, 500cc, Red color, excellent condition', 15.00),
-('MB002', 'Airport Terminal', 'Yamaha MT-07 - Naked bike, 689cc, Blue color, comfortable for long rides', 18.00),
-('MB003', 'City Center Mall', 'Kawasaki Ninja 400 - Sport bike, 399cc, Green color, perfect for beginners', 12.00),
-('MB004', 'Beach Boulevard', 'Suzuki V-Strom 650 - Adventure bike, 645cc, White color, great for touring', 20.00),
-('MB005', 'University Campus', 'Honda PCX 150 - Scooter, 150cc, Black color, fuel efficient and easy to ride', 8.00),
-('MB006', 'Downtown Station', 'Ducati Monster 821 - Naked bike, 821cc, Red color, high performance', 25.00),
-('MB007', 'City Center Mall', 'BMW G 310 R - Naked bike, 313cc, White color, premium quality', 16.00),
-('MB008', 'Airport Terminal', 'KTM Duke 390 - Naked bike, 373cc, Orange color, sporty and agile', 14.00);
+('MB001', 'Orchard MRT Station', 'Honda CBR500R - Sport bike, 500cc, Red color, excellent condition', 15.00),
+('MB002', 'Changi Airport Terminal 3', 'Yamaha MT-07 - Naked bike, 689cc, Blue color, comfortable for long rides', 18.00),
+('MB003', 'Marina Bay Sands', 'Kawasaki Ninja 400 - Sport bike, 399cc, Green color, perfect for beginners', 12.00),
+('MB004', 'East Coast Park', 'Suzuki V-Strom 650 - Adventure bike, 645cc, White color, great for touring', 20.00),
+('MB005', 'NUS Campus', 'Honda PCX 150 - Scooter, 150cc, Black color, fuel efficient and easy to ride', 8.00),
+('MB006', 'Raffles Place MRT', 'Ducati Monster 821 - Naked bike, 821cc, Red color, high performance', 25.00),
+('MB007', 'VivoCity Shopping Centre', 'BMW G 310 R - Naked bike, 313cc, White color, premium quality', 16.00),
+('MB008', 'Jurong East MRT', 'KTM Duke 390 - Naked bike, 373cc, Orange color, sporty and agile', 14.00);
 
 -- Insert Sample Rentals (some active, some completed)
 INSERT INTO rentals (userId, motorbikeCode, startDateTime, endDateTime, costPerHourAtStart, status) VALUES

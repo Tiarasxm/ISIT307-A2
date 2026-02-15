@@ -48,6 +48,23 @@ $conn->close();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - MotoCity</title>
     <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        main.container {
+            max-width: 1000px;
+            padding: 2.5rem 2rem;
+            margin-top: 4rem;
+        }
+        .card {
+            padding: 1.5rem;
+        }
+        .card-grid {
+            margin-top: 1.5rem;
+            gap: 1.25rem;
+        }
+        h3 {
+            margin-bottom: 1rem;
+        }
+    </style>
 </head>
 <body>
     <header>

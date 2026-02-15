@@ -66,6 +66,16 @@ $result = $conn->query($sql);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Motorbikes - MotoCity</title>
     <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        main.container {
+            max-width: 1000px;
+            padding: 2.5rem 2rem;
+            margin-top: 4rem;
+        }
+        .card {
+            padding: 1.5rem;
+        }
+    </style>
 </head>
 <body>
     <header>

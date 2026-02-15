@@ -127,7 +127,14 @@ class Rental {
         $end = new DateTime($endDateTime);
         $interval = $start->diff($end);
         
+        // Calculate total hours including minutes
         $hours = $interval->h + ($interval->days * 24) + ($interval->i / 60);
+        
+        // Minimum charge: 1 hour (even if rented for less time)
+        if ($hours < 1) {
+            $hours = 1;
+        }
+        
         $totalCost = $hours * $costPerHour;
         
         return round($totalCost, 2);

@@ -1,45 +1,27 @@
 <?php
 session_start();
+require_once 'classes/Database.php';
+require_once 'classes/Auth.php';
+require_once 'classes/Motorbike.php';
+require_once 'classes/Rental.php';
 
-// Require login
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit();
-}
+Auth::requireLogin();
 
-include 'db_connect.php';
-
-$user_id = $_SESSION['user_id'];
-$user_type = $_SESSION['user_type'];
-$is_admin = ($user_type === 'Administrator');
+$isAdmin = Auth::isAdmin();
+$motorbike = new Motorbike();
+$rental = new Rental();
 
 // Get statistics
-if ($is_admin) {
-    // Admin statistics
-    $result = $conn->query("SELECT COUNT(*) as count FROM motorbikes");
-    $totalMotorbikes = $result->fetch_assoc()['count'];
-    
-    $result = $conn->query("SELECT COUNT(*) as count FROM motorbikes WHERE code NOT IN (SELECT motorbikeCode FROM rentals WHERE status = 'ACTIVE')");
-    $availableMotorbikes = $result->fetch_assoc()['count'];
-    
-    $result = $conn->query("SELECT COUNT(DISTINCT motorbikeCode) as count FROM rentals WHERE status = 'ACTIVE'");
-    $rentedMotorbikes = $result->fetch_assoc()['count'];
-    
-    $result = $conn->query("SELECT COUNT(*) as count FROM rentals WHERE status = 'ACTIVE'");
-    $activeRentals = $result->fetch_assoc()['count'];
+if ($isAdmin) {
+    $totalMotorbikes = count($motorbike->getAllMotorbikes());
+    $availableMotorbikes = count($motorbike->getAvailableMotorbikes());
+    $rentedMotorbikes = count($motorbike->getRentedMotorbikes());
+    $activeRentals = count($rental->getAllActiveRentals());
 } else {
-    // User statistics
-    $result = $conn->query("SELECT COUNT(*) as count FROM motorbikes WHERE code NOT IN (SELECT motorbikeCode FROM rentals WHERE status = 'ACTIVE')");
-    $availableMotorbikes = $result->fetch_assoc()['count'];
-    
-    $result = $conn->query("SELECT COUNT(*) as count FROM rentals WHERE userId = $user_id AND status = 'ACTIVE'");
-    $myActiveRentals = $result->fetch_assoc()['count'];
-    
-    $result = $conn->query("SELECT COUNT(*) as count FROM rentals WHERE userId = $user_id AND status = 'COMPLETED'");
-    $myCompletedRentals = $result->fetch_assoc()['count'];
+    $availableMotorbikes = count($motorbike->getAvailableMotorbikes());
+    $myActiveRentals = count($rental->getActiveRentalsByUser(Auth::getCurrentUserId()));
+    $myCompletedRentals = count($rental->getCompletedRentalsByUser(Auth::getCurrentUserId()));
 }
-
-$conn->close();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -67,21 +49,8 @@ $conn->close();
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <h1>MotoCity</h1>
-        </div>
-    </header>
-    
-    <nav>
-        <div class="container">
-            <ul>
-                <li><a href="dashboard.php" class="active">Dashboard</a></li>
-                <li><a href="motorbikes_list.php">Motorbikes</a></li>
-                <li><a href="logout.php">Logout (<?php echo htmlspecialchars($_SESSION['user_name']); ?>)</a></li>
-            </ul>
-        </div>
-    </nav>
+    <?php include 'includes/header.php'; ?>
+    <?php include 'includes/nav.php'; ?>
 
     <main class="container">
         <h2>Dashboard</h2>
@@ -101,7 +70,7 @@ $conn->close();
             <p><strong>Email:</strong> <?php echo htmlspecialchars($_SESSION['user_email']); ?></p>
         </div>
         
-        <?php if ($is_admin): ?>
+        <?php if ($isAdmin): ?>
             <!-- Administrator Dashboard -->
             <h3>System Overview</h3>
             <div class="card-grid">
@@ -135,15 +104,15 @@ $conn->close();
                     <p style="font-size: 2rem; color: var(--color-accent); font-weight: bold;"><?php echo $availableMotorbikes; ?></p>
                 </a>
                 
-                <div class="card">
+                <a href="rentals_current.php" class="card card-clickable">
                     <h3>My Active Rentals</h3>
                     <p style="font-size: 2rem; color: var(--color-accent); font-weight: bold;"><?php echo $myActiveRentals; ?></p>
-                </div>
+                </a>
                 
-                <div class="card">
+                <a href="rentals_history.php" class="card card-clickable">
                     <h3>Completed Rentals</h3>
                     <p style="font-size: 2rem; color: var(--color-accent); font-weight: bold;"><?php echo $myCompletedRentals; ?></p>
-                </div>
+                </a>
             </div>
         <?php endif; ?>
     </main>

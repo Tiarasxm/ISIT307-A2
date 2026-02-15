@@ -1,45 +1,38 @@
 <?php
 session_start();
+require_once 'classes/Database.php';
+require_once 'classes/Auth.php';
+require_once 'classes/User.php';
+
+Auth::redirectIfLoggedIn();
+
 $error = "";
 $email = "";
 
-// Redirect if already logged in
-if (isset($_SESSION['user_id'])) {
-    header("Location: dashboard.php");
-    exit();
-}
-
-// Handle login form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    include 'db_connect.php';
+    $email = trim($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
     
-    $email = mysqli_real_escape_string($conn, $_POST['email']);
-    $password = $_POST['password'];
-    
-    $sql = "SELECT * FROM users WHERE email = '$email'";
-    $result = $conn->query($sql);
-    
-    if ($result->num_rows > 0) {
-        $user = $result->fetch_assoc();
+    if (empty($email) || empty($password)) {
+        $error = "Email and password are required";
+    } else {
+        $user = new User();
+        $result = $user->login($email, $password);
         
-        if (password_verify($password, $user['password'])) {
-            // Login successful
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['user_name'] = $user['name'];
-            $_SESSION['user_surname'] = $user['surname'];
-            $_SESSION['user_email'] = $user['email'];
-            $_SESSION['user_type'] = $user['type'];
-            
+        if ($result instanceof User) {
+            Auth::setUserSession(
+                $result->getId(),
+                $result->getName(),
+                $result->getSurname(),
+                $result->getEmail(),
+                $result->getType()
+            );
             header("Location: dashboard.php");
             exit();
         } else {
-            $error = "Invalid email or password";
+            $error = $result;
         }
-    } else {
-        $error = "Invalid email or password";
     }
-    
-    $conn->close();
 }
 ?>
 <!DOCTYPE html>

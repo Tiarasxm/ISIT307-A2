@@ -1,63 +1,41 @@
 <?php
 session_start();
+require_once 'classes/Database.php';
+require_once 'classes/Auth.php';
+require_once 'classes/Motorbike.php';
 
-// Require login
-if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit();
-}
+Auth::requireLogin();
 
-include 'db_connect.php';
+$isAdmin = Auth::isAdmin();
+$filter = $_GET['filter'] ?? 'all';
+$searchCode = trim($_GET['search_code'] ?? '');
+$searchLocation = trim($_GET['search_location'] ?? '');
+$searchDescription = trim($_GET['search_description'] ?? '');
 
-$user_type = $_SESSION['user_type'];
-$is_admin = ($user_type === 'Administrator');
+$isSearching = !empty($searchCode) || !empty($searchLocation) || !empty($searchDescription);
 
-// Get filter and search parameters
-$filter = isset($_GET['filter']) ? $_GET['filter'] : 'all';
-$search_code = isset($_GET['search_code']) ? mysqli_real_escape_string($conn, trim($_GET['search_code'])) : '';
-$search_location = isset($_GET['search_location']) ? mysqli_real_escape_string($conn, trim($_GET['search_location'])) : '';
-$search_description = isset($_GET['search_description']) ? mysqli_real_escape_string($conn, trim($_GET['search_description'])) : '';
+$motorbike = new Motorbike();
 
-$is_searching = !empty($search_code) || !empty($search_location) || !empty($search_description);
-
-// Build SQL query
-if ($is_searching) {
-    $sql = "SELECT * FROM motorbikes WHERE 1=1";
-    if (!empty($search_code)) {
-        $sql .= " AND code LIKE '%$search_code%'";
-    }
-    if (!empty($search_location)) {
-        $sql .= " AND rentingLocation LIKE '%$search_location%'";
-    }
-    if (!empty($search_description)) {
-        $sql .= " AND description LIKE '%$search_description%'";
-    }
-    
-    // If not admin, only show available
-    if (!$is_admin) {
-        $sql .= " AND code NOT IN (SELECT motorbikeCode FROM rentals WHERE status = 'ACTIVE')";
-    }
-    $list_title = "Search Results";
+if ($isSearching) {
+    $motorbikes = $motorbike->searchMotorbikes($searchCode, $searchLocation, $searchDescription);
+    $listTitle = "Search Results";
 } else {
-    // Get motorbikes based on filter
-    if ($is_admin) {
+    if ($isAdmin) {
         if ($filter === 'available') {
-            $sql = "SELECT * FROM motorbikes WHERE code NOT IN (SELECT motorbikeCode FROM rentals WHERE status = 'ACTIVE')";
-            $list_title = "Available Motorbikes";
+            $motorbikes = $motorbike->getAvailableMotorbikes();
+            $listTitle = "Available Motorbikes";
         } elseif ($filter === 'rented') {
-            $sql = "SELECT DISTINCT m.* FROM motorbikes m INNER JOIN rentals r ON m.code = r.motorbikeCode WHERE r.status = 'ACTIVE'";
-            $list_title = "Currently Rented Motorbikes";
+            $motorbikes = $motorbike->getRentedMotorbikes();
+            $listTitle = "Currently Rented Motorbikes";
         } else {
-            $sql = "SELECT * FROM motorbikes";
-            $list_title = "All Motorbikes";
+            $motorbikes = $motorbike->getAllMotorbikes();
+            $listTitle = "All Motorbikes";
         }
     } else {
-        $sql = "SELECT * FROM motorbikes WHERE code NOT IN (SELECT motorbikeCode FROM rentals WHERE status = 'ACTIVE')";
-        $list_title = "Available Motorbikes";
+        $motorbikes = $motorbike->getAvailableMotorbikes();
+        $listTitle = "Available Motorbikes";
     }
 }
-
-$result = $conn->query($sql);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -78,24 +56,11 @@ $result = $conn->query($sql);
     </style>
 </head>
 <body>
-    <header>
-        <div class="container">
-            <h1>MotoCity</h1>
-        </div>
-    </header>
-    
-    <nav>
-        <div class="container">
-            <ul>
-                <li><a href="dashboard.php">Dashboard</a></li>
-                <li><a href="motorbikes_list.php" class="active">Motorbikes</a></li>
-                <li><a href="logout.php">Logout (<?php echo htmlspecialchars($_SESSION['user_name']); ?>)</a></li>
-            </ul>
-        </div>
-    </nav>
+    <?php include 'includes/header.php'; ?>
+    <?php include 'includes/nav.php'; ?>
 
     <main class="container">
-        <h2><?php echo $list_title; ?></h2>
+        <h2><?php echo $listTitle; ?></h2>
         
         <!-- Search Form -->
         <div class="card">
@@ -104,29 +69,31 @@ $result = $conn->query($sql);
                 <div class="form-row">
                     <div class="form-group">
                         <label for="search_code">Code</label>
-                        <input type="text" id="search_code" name="search_code" value="<?php echo htmlspecialchars($search_code); ?>" placeholder="e.g., MB001">
+                        <input type="text" id="search_code" name="search_code" value="<?php echo htmlspecialchars($searchCode); ?>" placeholder="e.g., MB001">
                     </div>
                     
                     <div class="form-group">
                         <label for="search_location">Location</label>
-                        <input type="text" id="search_location" name="search_location" value="<?php echo htmlspecialchars($search_location); ?>" placeholder="e.g., Orchard">
+                        <input type="text" id="search_location" name="search_location" value="<?php echo htmlspecialchars($searchLocation); ?>" placeholder="e.g., Orchard">
                     </div>
                     
                     <div class="form-group">
                         <label for="search_description">Description</label>
-                        <input type="text" id="search_description" name="search_description" value="<?php echo htmlspecialchars($search_description); ?>" placeholder="e.g., Honda">
+                        <input type="text" id="search_description" name="search_description" value="<?php echo htmlspecialchars($searchDescription); ?>" placeholder="e.g., Honda">
                     </div>
                 </div>
                 
                 <div class="form-group">
                     <button type="submit" class="btn">Search</button>
                     <a href="motorbikes_list.php" class="btn btn-secondary">Clear Search</a>
+                    <?php if ($isAdmin): ?>
+                        <a href="motorbike_form.php" class="btn">Add New Motorbike</a>
+                    <?php endif; ?>
                 </div>
             </form>
         </div>
         
-        <?php if ($is_admin && !$is_searching): ?>
-            <!-- Filter options for admin -->
+        <?php if ($isAdmin && !$isSearching): ?>
             <div class="mb-2">
                 <a href="motorbikes_list.php?filter=all" class="btn <?php echo $filter === 'all' ? '' : 'btn-secondary'; ?> btn-small">All Motorbikes</a>
                 <a href="motorbikes_list.php?filter=available" class="btn <?php echo $filter === 'available' ? '' : 'btn-secondary'; ?> btn-small">Available</a>
@@ -134,7 +101,7 @@ $result = $conn->query($sql);
             </div>
         <?php endif; ?>
         
-        <?php if ($result->num_rows == 0): ?>
+        <?php if (empty($motorbikes)): ?>
             <div class="message info">
                 No motorbikes found.
             </div>
@@ -146,21 +113,29 @@ $result = $conn->query($sql);
                         <th>Location</th>
                         <th>Description</th>
                         <th>Cost per Hour</th>
+                        <?php if ($isAdmin): ?>
+                            <th>Actions</th>
+                        <?php endif; ?>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php while ($bike = $result->fetch_assoc()): ?>
+                    <?php foreach ($motorbikes as $bike): ?>
                         <tr>
                             <td><strong><?php echo htmlspecialchars($bike['code']); ?></strong></td>
                             <td><?php echo htmlspecialchars($bike['rentingLocation']); ?></td>
                             <td><?php echo htmlspecialchars($bike['description']); ?></td>
                             <td>$<?php echo number_format($bike['costPerHour'], 2); ?></td>
+                            <?php if ($isAdmin): ?>
+                                <td>
+                                    <a href="motorbike_form.php?code=<?php echo urlencode($bike['code']); ?>" class="btn btn-small">Edit</a>
+                                </td>
+                            <?php endif; ?>
                         </tr>
-                    <?php endwhile; ?>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
             
-            <p class="mt-1"><strong>Total:</strong> <?php echo $result->num_rows; ?> motorbike(s)</p>
+            <p class="mt-1"><strong>Total:</strong> <?php echo count($motorbikes); ?> motorbike(s)</p>
         <?php endif; ?>
         
         <div class="mt-2">
@@ -169,4 +144,3 @@ $result = $conn->query($sql);
     </main>
 </body>
 </html>
-<?php $conn->close(); ?>

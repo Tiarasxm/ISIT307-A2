@@ -1,5 +1,11 @@
 <?php
 session_start();
+require_once 'classes/Database.php';
+require_once 'classes/Auth.php';
+require_once 'classes/User.php';
+
+Auth::redirectIfLoggedIn();
+
 $errors = [];
 $name = "";
 $surname = "";
@@ -7,23 +13,14 @@ $phone = "";
 $email = "";
 $type = "";
 
-// Redirect if already logged in
-if (isset($_SESSION['user_id'])) {
-    header("Location: dashboard.php");
-    exit();
-}
-
-// Handle registration form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    include 'db_connect.php';
-    
-    $name = mysqli_real_escape_string($conn, trim($_POST['name']));
-    $surname = mysqli_real_escape_string($conn, trim($_POST['surname']));
-    $phone = '+65' . mysqli_real_escape_string($conn, trim($_POST['phone']));
-    $email = mysqli_real_escape_string($conn, trim($_POST['email']));
-    $type = mysqli_real_escape_string($conn, $_POST['type']);
-    $password = $_POST['password'];
-    $confirm_password = $_POST['confirm_password'];
+    $name = trim($_POST['name'] ?? '');
+    $surname = trim($_POST['surname'] ?? '');
+    $phone = '+65' . trim($_POST['phone'] ?? '');
+    $email = trim($_POST['email'] ?? '');
+    $type = $_POST['type'] ?? '';
+    $password = $_POST['password'] ?? '';
+    $confirmPassword = $_POST['confirm_password'] ?? '';
     
     // Validation
     if (empty($name)) $errors[] = "Name is required";
@@ -40,35 +37,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (strlen($password) < 6) {
         $errors[] = "Password must be at least 6 characters";
     }
-    if ($password !== $confirm_password) {
+    if ($password !== $confirmPassword) {
         $errors[] = "Passwords do not match";
     }
     
-    // Check if email exists
     if (empty($errors)) {
-        $sql = "SELECT id FROM users WHERE email = '$email'";
-        $result = $conn->query($sql);
-        if ($result->num_rows > 0) {
-            $errors[] = "Email already registered";
-        }
-    }
-    
-    // Insert user
-    if (empty($errors)) {
-        $password_hash = password_hash($password, PASSWORD_DEFAULT);
-        $sql = "INSERT INTO users (name, surname, phone, email, type, password) 
-                VALUES ('$name', '$surname', '$phone', '$email', '$type', '$password_hash')";
+        $user = new User();
+        $user->setName($name);
+        $user->setSurname($surname);
+        $user->setPhone($phone);
+        $user->setEmail($email);
+        $user->setType($type);
+        $user->setPassword($password);
         
-        if ($conn->query($sql) === TRUE) {
+        $result = $user->register();
+        
+        if ($result === true) {
             $_SESSION['success_message'] = "Registration successful! Please login.";
             header("Location: login.php");
             exit();
         } else {
-            $errors[] = "Registration failed: " . $conn->error;
+            $errors[] = $result;
         }
     }
-    
-    $conn->close();
 }
 ?>
 <!DOCTYPE html>

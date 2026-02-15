@@ -9,8 +9,21 @@ session_start();
     <title>MotoCity - Motorbike Rental</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
         main.container {
-            margin-top: 4rem !important;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex: 1;
+            padding: 2rem;
+        }
+        main.container .card {
+            max-width: 600px;
+            width: 100%;
         }
         .index-header {
             background-color: #2C3E50;

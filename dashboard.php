@@ -104,7 +104,7 @@ if ($isAdmin) {
                     <p style="font-size: 2rem; color: var(--color-accent); font-weight: bold;"><?php echo $availableMotorbikes; ?></p>
                 </a>
                 
-                <a href="rentals_current.php" class="card card-clickable">
+                <a href="return.php" class="card card-clickable">
                     <h3>My Active Rentals</h3>
                     <p style="font-size: 2rem; color: var(--color-accent); font-weight: bold;"><?php echo $myActiveRentals; ?></p>
                 </a>

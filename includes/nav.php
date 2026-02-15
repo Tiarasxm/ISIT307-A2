@@ -20,7 +20,6 @@ $isAdmin = Auth::isAdmin();
                     <li><a href="motorbikes_list.php" <?php echo $currentPage == 'motorbikes_list.php' ? 'class="active"' : ''; ?>>Motorbikes</a></li>
                     <li><a href="rent.php" <?php echo $currentPage == 'rent.php' ? 'class="active"' : ''; ?>>Rent</a></li>
                     <li><a href="return.php" <?php echo $currentPage == 'return.php' ? 'class="active"' : ''; ?>>Return</a></li>
-                    <li><a href="rentals_current.php" <?php echo $currentPage == 'rentals_current.php' ? 'class="active"' : ''; ?>>My Rentals</a></li>
                     <li><a href="rentals_history.php" <?php echo $currentPage == 'rentals_history.php' ? 'class="active"' : ''; ?>>History</a></li>
                 <?php endif; ?>
                 

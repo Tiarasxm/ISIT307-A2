@@ -194,7 +194,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             
             <div class="form-group">
                 <button type="submit" class="btn">Register</button>
-                <a href="index.php" class="btn btn-secondary">Cancel</a>
+                <a href="login.php" class="btn btn-secondary">Cancel</a>
             </div>
         </form>
         

@@ -25,7 +25,6 @@ $isAdmin = Auth::isAdmin();
                 
                 <li><a href="logout.php">Logout (<?php echo Auth::getCurrentUserName(); ?>)</a></li>
             <?php else: ?>
-                <li><a href="index.php" <?php echo $currentPage == 'index.php' ? 'class="active"' : ''; ?>>Home</a></li>
                 <li><a href="login.php" <?php echo $currentPage == 'login.php' ? 'class="active"' : ''; ?>>Login</a></li>
                 <li><a href="register.php" <?php echo $currentPage == 'register.php' ? 'class="active"' : ''; ?>>Register</a></li>
             <?php endif; ?>

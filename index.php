@@ -1,19 +1,12 @@
 <?php
-/**
- * Index page - Landing/Welcome page
- */
-require_once 'includes/config.php';
-require_once 'classes/Database.php';
-require_once 'classes/Auth.php';
-
-$pageTitle = 'Welcome';
+session_start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $pageTitle . ' - ' . SITE_NAME; ?></title>
+    <title>MotoCity - Motorbike Rental</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
         main.container {
@@ -77,36 +70,36 @@ $pageTitle = 'Welcome';
 <body>
     <header class="index-header">
         <div class="container">
-            <h1><?php echo SITE_NAME; ?></h1>
+            <h1>MotoCity</h1>
             <div class="header-buttons">
-                <?php if (!Auth::isLoggedIn()): ?>
+                <?php if (!isset($_SESSION['user_id'])): ?>
                     <a href="login.php" class="btn-login">Login</a>
                     <a href="register.php" class="btn-register">Register</a>
                 <?php else: ?>
-                    <span style="margin-right: 1rem;">Welcome, <strong><?php echo Auth::getCurrentUserName(); ?></strong></span>
                     <a href="dashboard.php" class="btn-dashboard">Dashboard</a>
                 <?php endif; ?>
             </div>
         </div>
     </header>
 
-<main class="container">
-    <div class="welcome-hero">
-        <h2>Welcome to MotoCity</h2>
-        <p style="font-size: 1.1rem; color: #666;">Motorbike Rental Management System</p>
-    </div>
-    
-    <?php if (!Auth::isLoggedIn()): ?>
-    <div class="text-center mt-2">
-        <a href="login.php" class="btn">Login</a>
-        <a href="register.php" class="btn btn-secondary">Register</a>
-    </div>
-    <?php else: ?>
-    <div class="text-center mt-2">
-        <p style="margin-bottom: 1.5rem;">Welcome back, <strong><?php echo Auth::getCurrentUserName(); ?></strong></p>
-        <a href="dashboard.php" class="btn">Go to Dashboard</a>
-    </div>
-    <?php endif; ?>
-</main>
-
-<?php include 'includes/footer.php'; ?>
+    <main class="container">
+        <div class="card">
+            <h2>Welcome to MotoCity</h2>
+            <p>Your trusted motorbike rental service in Singapore.</p>
+            
+            <?php if (!isset($_SESSION['user_id'])): ?>
+                <p>Please login or register to start renting motorbikes.</p>
+                <div style="margin-top: 1.5rem;">
+                    <a href="login.php" class="btn">Login</a>
+                    <a href="register.php" class="btn btn-secondary">Register</a>
+                </div>
+            <?php else: ?>
+                <p>Welcome back, <?php echo htmlspecialchars($_SESSION['user_name']); ?>!</p>
+                <div style="margin-top: 1.5rem;">
+                    <a href="dashboard.php" class="btn">Go to Dashboard</a>
+                </div>
+            <?php endif; ?>
+        </div>
+    </main>
+</body>
+</html>

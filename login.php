@@ -1,63 +1,53 @@
 <?php
-/**
- * Login page - User authentication
- */
-require_once 'includes/config.php';
-require_once 'includes/validation.php';
-require_once 'classes/Database.php';
-require_once 'classes/User.php';
-require_once 'classes/Auth.php';
+session_start();
+$error = "";
+$email = "";
 
 // Redirect if already logged in
-Auth::redirectIfLoggedIn();
+if (isset($_SESSION['user_id'])) {
+    header("Location: dashboard.php");
+    exit();
+}
 
-$pageTitle = 'Login';
-$errors = [];
-$email = '';
-
-// Handle form submission
+// Handle login form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Get and sanitize inputs
-    $email = sanitizeString($_POST['email'] ?? '');
-    $password = $_POST['password'] ?? '';
+    include 'db_connect.php';
     
-    // Validate inputs
-    $errors = collectErrors([
-        validateEmail($email),
-        validateRequired($password, 'Password')
-    ]);
+    $email = mysqli_real_escape_string($conn, $_POST['email']);
+    $password = $_POST['password'];
     
-    // If no errors, attempt login
-    if (empty($errors)) {
-        $user = new User();
-        $result = $user->login($email, $password);
+    $sql = "SELECT * FROM users WHERE email = '$email'";
+    $result = $conn->query($sql);
+    
+    if ($result->num_rows > 0) {
+        $user = $result->fetch_assoc();
         
-        if ($result instanceof User) {
-            // Login successful - set session
-            Auth::setUserSession(
-                $result->getId(),
-                $result->getName(),
-                $result->getSurname(),
-                $result->getEmail(),
-                $result->getType()
-            );
+        if (password_verify($password, $user['password'])) {
+            // Login successful
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['user_name'] = $user['name'];
+            $_SESSION['user_surname'] = $user['surname'];
+            $_SESSION['user_email'] = $user['email'];
+            $_SESSION['user_type'] = $user['type'];
             
-            // Redirect to dashboard
             header("Location: dashboard.php");
             exit();
         } else {
-            $errors[] = $result;
+            $error = "Invalid email or password";
         }
+    } else {
+        $error = "Invalid email or password";
     }
+    
+    $conn->close();
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $pageTitle . ' - ' . SITE_NAME; ?></title>
+    <title>Login - MotoCity</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
         main.container {
@@ -109,12 +99,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background-color: #e8855a;
             border-color: #e8855a;
         }
+        .container.narrow {
+            max-width: 600px;
+        }
     </style>
 </head>
 <body>
     <header class="index-header">
         <div class="container">
-            <h1><?php echo SITE_NAME; ?></h1>
+            <h1>MotoCity</h1>
             <div class="header-buttons">
                 <a href="login.php" class="btn-login">Login</a>
                 <a href="register.php" class="btn-register">Register</a>
@@ -122,49 +115,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </header>
 
-<main class="container narrow">
-    <h2>Login</h2>
-    
-    <?php if (isset($_SESSION['success_message'])): ?>
-        <div class="message success">
-            <?php 
-            echo htmlspecialchars($_SESSION['success_message']); 
-            unset($_SESSION['success_message']);
-            ?>
-        </div>
-    <?php endif; ?>
-    
-    <?php if (!empty($errors)): ?>
-        <div class="message error">
-            <strong>Login failed:</strong>
-            <ul>
-                <?php foreach ($errors as $error): ?>
-                    <li><?php echo htmlspecialchars($error); ?></li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
-    <?php endif; ?>
-    
-    <form method="POST" action="login.php">
-        <div class="form-group">
-            <label for="email">Email *</label>
-            <input type="email" id="email" name="email" value="<?php echo isset($email) ? htmlspecialchars($email) : ''; ?>" required>
-        </div>
+    <main class="container narrow">
+        <h2>Login</h2>
         
-        <div class="form-group">
-            <label for="password">Password *</label>
-            <input type="password" id="password" name="password" required>
-        </div>
+        <?php if (isset($_SESSION['success_message'])): ?>
+            <div class="message success">
+                <?php 
+                echo htmlspecialchars($_SESSION['success_message']); 
+                unset($_SESSION['success_message']);
+                ?>
+            </div>
+        <?php endif; ?>
         
-        <div class="form-group">
-            <button type="submit" class="btn">Login</button>
-            <a href="index.php" class="btn btn-secondary">Cancel</a>
-        </div>
-    </form>
-    
-    <p style="text-align: center; margin-top: 1.5rem;">
-        Don't have an account? <a href="register.php" style="color: var(--color-accent); text-decoration: none; font-weight: 500;">Register here</a>
-    </p>
-</main>
-
-<?php include 'includes/footer.php'; ?>
+        <?php if ($error): ?>
+            <div class="message error">
+                <?php echo htmlspecialchars($error); ?>
+            </div>
+        <?php endif; ?>
+        
+        <form method="POST" action="login.php">
+            <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password *</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            
+            <div class="form-group">
+                <button type="submit" class="btn">Login</button>
+                <a href="index.php" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+        
+        <p style="text-align: center; margin-top: 1.5rem;">
+            Don't have an account? <a href="register.php" style="color: var(--color-accent); text-decoration: none; font-weight: 500;">Register here</a>
+        </p>
+    </main>
+</body>
+</html>

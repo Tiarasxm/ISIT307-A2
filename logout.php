@@ -1,14 +1,6 @@
 <?php
-/**
- * Logout page - Clear user session
- */
-require_once 'includes/config.php';
-require_once 'classes/Auth.php';
-
-// Clear session
-Auth::clearUserSession();
-
-// Redirect to home page
+session_start();
+session_destroy();
 header("Location: index.php");
 exit();
 ?>

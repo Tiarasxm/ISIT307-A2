@@ -1,85 +1,82 @@
 <?php
-/**
- * Register page - User registration
- * Both Administrator and User types can register
- */
-require_once 'includes/config.php';
-require_once 'includes/validation.php';
-require_once 'classes/Database.php';
-require_once 'classes/User.php';
-require_once 'classes/Auth.php';
+session_start();
+$errors = [];
+$name = "";
+$surname = "";
+$phone = "";
+$email = "";
+$type = "";
 
 // Redirect if already logged in
-Auth::redirectIfLoggedIn();
+if (isset($_SESSION['user_id'])) {
+    header("Location: dashboard.php");
+    exit();
+}
 
-$pageTitle = 'Register';
-$errors = [];
-$success = false;
-$name = '';
-$surname = '';
-$phone = '';
-$email = '';
-$type = '';
-
-// Handle form submission
+// Handle registration form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Get and sanitize inputs
-    $name = sanitizeString($_POST['name'] ?? '');
-    $surname = sanitizeString($_POST['surname'] ?? '');
-    $phone = sanitizeString($_POST['phone'] ?? '');
-    // Prepend +65 to phone number
-    $phone = '+65' . $phone;
-    $email = sanitizeString($_POST['email'] ?? '');
-    $type = sanitizeString($_POST['type'] ?? '');
-    $password = $_POST['password'] ?? '';
-    $confirmPassword = $_POST['confirm_password'] ?? '';
+    include 'db_connect.php';
     
-    // Validate inputs
-    $errors = collectErrors([
-        validateRequired($name, 'Name'),
-        validateRequired($surname, 'Surname'),
-        validatePhone($phone),
-        validateEmail($email),
-        validateRequired($type, 'User type'),
-        validatePassword($password),
-        validatePasswordConfirmation($password, $confirmPassword)
-    ]);
+    $name = mysqli_real_escape_string($conn, trim($_POST['name']));
+    $surname = mysqli_real_escape_string($conn, trim($_POST['surname']));
+    $phone = '+65' . mysqli_real_escape_string($conn, trim($_POST['phone']));
+    $email = mysqli_real_escape_string($conn, trim($_POST['email']));
+    $type = mysqli_real_escape_string($conn, $_POST['type']);
+    $password = $_POST['password'];
+    $confirm_password = $_POST['confirm_password'];
     
-    // Validate user type
-    if (!in_array($type, ['Administrator', 'User'])) {
-        $errors[] = "Invalid user type";
+    // Validation
+    if (empty($name)) $errors[] = "Name is required";
+    if (empty($surname)) $errors[] = "Surname is required";
+    if (empty($_POST['phone']) || !preg_match('/^[0-9]{8}$/', $_POST['phone'])) {
+        $errors[] = "Phone must be 8 digits";
+    }
+    if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors[] = "Valid email is required";
+    }
+    if (empty($type) || !in_array($type, ['Administrator', 'User'])) {
+        $errors[] = "Valid user type is required";
+    }
+    if (strlen($password) < 6) {
+        $errors[] = "Password must be at least 6 characters";
+    }
+    if ($password !== $confirm_password) {
+        $errors[] = "Passwords do not match";
     }
     
-    // If no errors, register user
+    // Check if email exists
     if (empty($errors)) {
-        $user = new User();
-        $user->setName($name);
-        $user->setSurname($surname);
-        $user->setPhone($phone);
-        $user->setEmail($email);
-        $user->setType($type);
-        $user->setPassword($password);
+        $sql = "SELECT id FROM users WHERE email = '$email'";
+        $result = $conn->query($sql);
+        if ($result->num_rows > 0) {
+            $errors[] = "Email already registered";
+        }
+    }
+    
+    // Insert user
+    if (empty($errors)) {
+        $password_hash = password_hash($password, PASSWORD_DEFAULT);
+        $sql = "INSERT INTO users (name, surname, phone, email, type, password) 
+                VALUES ('$name', '$surname', '$phone', '$email', '$type', '$password_hash')";
         
-        $result = $user->register();
-        
-        if ($result === true) {
-            $success = true;
+        if ($conn->query($sql) === TRUE) {
             $_SESSION['success_message'] = "Registration successful! Please login.";
             header("Location: login.php");
             exit();
         } else {
-            $errors[] = $result;
+            $errors[] = "Registration failed: " . $conn->error;
         }
     }
+    
+    $conn->close();
 }
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $pageTitle . ' - ' . SITE_NAME; ?></title>
+    <title>Register - MotoCity</title>
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
         main.container {
@@ -131,12 +128,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background-color: #e8855a;
             border-color: #e8855a;
         }
+        .container.narrow {
+            max-width: 600px;
+        }
     </style>
 </head>
 <body>
     <header class="index-header">
         <div class="container">
-            <h1><?php echo SITE_NAME; ?></h1>
+            <h1>MotoCity</h1>
             <div class="header-buttons">
                 <a href="login.php" class="btn-login">Login</a>
                 <a href="register.php" class="btn-register">Register</a>
@@ -144,72 +144,72 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </header>
 
-<main class="container narrow">
-    <h2>Register</h2>
-    
-    <?php if (!empty($errors)): ?>
-        <div class="message error">
-            <strong>Please correct the following errors:</strong>
-            <ul>
-                <?php foreach ($errors as $error): ?>
-                    <li><?php echo htmlspecialchars($error); ?></li>
-                <?php endforeach; ?>
-            </ul>
-        </div>
-    <?php endif; ?>
-    
-    <form method="POST" action="register.php">
-        <div class="form-group">
-            <label for="name">Name *</label>
-            <input type="text" id="name" name="name" value="<?php echo isset($name) ? htmlspecialchars($name) : ''; ?>" required>
-        </div>
+    <main class="container narrow">
+        <h2>Register</h2>
         
-        <div class="form-group">
-            <label for="surname">Surname *</label>
-            <input type="text" id="surname" name="surname" value="<?php echo isset($surname) ? htmlspecialchars($surname) : ''; ?>" required>
-        </div>
-        
-        <div class="form-group">
-            <label for="phone">Phone *</label>
-            <div style="display: flex; align-items: center; gap: 0.5rem;">
-                <span style="padding: 0.75rem; background-color: var(--color-light); border: 1px solid #ddd; border-radius: 4px; font-weight: 500;">+65</span>
-                <input type="tel" id="phone" name="phone" value="<?php echo isset($phone) ? htmlspecialchars(str_replace('+65', '', $phone)) : ''; ?>" placeholder="e.g., 91234568" pattern="[0-9]{8}" maxlength="8" required style="flex: 1;">
+        <?php if (!empty($errors)): ?>
+            <div class="message error">
+                <strong>Please correct the following errors:</strong>
+                <ul>
+                    <?php foreach ($errors as $error): ?>
+                        <li><?php echo htmlspecialchars($error); ?></li>
+                    <?php endforeach; ?>
+                </ul>
             </div>
-        </div>
+        <?php endif; ?>
         
-        <div class="form-group">
-            <label for="email">Email *</label>
-            <input type="email" id="email" name="email" value="<?php echo isset($email) ? htmlspecialchars($email) : ''; ?>" required>
-        </div>
+        <form method="POST" action="register.php">
+            <div class="form-group">
+                <label for="name">Name *</label>
+                <input type="text" id="name" name="name" value="<?php echo htmlspecialchars($name); ?>" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="surname">Surname *</label>
+                <input type="text" id="surname" name="surname" value="<?php echo htmlspecialchars($surname); ?>" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="phone">Phone *</label>
+                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="padding: 0.75rem; background-color: var(--color-light); border: 1px solid #ddd; border-radius: 4px; font-weight: 500;">+65</span>
+                    <input type="tel" id="phone" name="phone" value="<?php echo htmlspecialchars(str_replace('+65', '', $phone)); ?>" placeholder="e.g., 91234568" pattern="[0-9]{8}" maxlength="8" required style="flex: 1;">
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label for="email">Email *</label>
+                <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($email); ?>" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="type">User Type *</label>
+                <select id="type" name="type" required>
+                    <option value="">-- Select Type --</option>
+                    <option value="User" <?php echo ($type === 'User') ? 'selected' : ''; ?>>User</option>
+                    <option value="Administrator" <?php echo ($type === 'Administrator') ? 'selected' : ''; ?>>Administrator</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">Password * (minimum 6 characters)</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password *</label>
+                <input type="password" id="confirm_password" name="confirm_password" required>
+            </div>
+            
+            <div class="form-group">
+                <button type="submit" class="btn">Register</button>
+                <a href="index.php" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
         
-        <div class="form-group">
-            <label for="type">User Type *</label>
-            <select id="type" name="type" required>
-                <option value="">-- Select Type --</option>
-                <option value="User" <?php echo (isset($type) && $type === 'User') ? 'selected' : ''; ?>>User</option>
-                <option value="Administrator" <?php echo (isset($type) && $type === 'Administrator') ? 'selected' : ''; ?>>Administrator</option>
-            </select>
-        </div>
-        
-        <div class="form-group">
-            <label for="password">Password * (minimum 6 characters)</label>
-            <input type="password" id="password" name="password" required>
-        </div>
-        
-        <div class="form-group">
-            <label for="confirm_password">Confirm Password *</label>
-            <input type="password" id="confirm_password" name="confirm_password" required>
-        </div>
-        
-        <div class="form-group">
-            <button type="submit" class="btn">Register</button>
-            <a href="index.php" class="btn btn-secondary">Cancel</a>
-        </div>
-    </form>
-    
-    <p style="text-align: center; margin-top: 1.5rem;">
-        Already have an account? <a href="login.php" style="color: var(--color-accent); text-decoration: none; font-weight: 500;">Login here</a>
-    </p>
-</main>
-
-<?php include 'includes/footer.php'; ?>
+        <p style="text-align: center; margin-top: 1.5rem;">
+            Already have an account? <a href="login.php" style="color: var(--color-accent); text-decoration: none; font-weight: 500;">Login here</a>
+        </p>
+    </main>
+</body>
+</html>

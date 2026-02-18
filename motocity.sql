@@ -34,7 +34,7 @@ CREATE TABLE `motorbikes` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `motorbikes`
+-- Data for table `motorbikes`
 --
 
 LOCK TABLES `motorbikes` WRITE;
@@ -70,7 +70,7 @@ CREATE TABLE `rentals` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `rentals`
+-- Data for table `rentals`
 --
 
 LOCK TABLES `rentals` WRITE;
@@ -103,7 +103,7 @@ CREATE TABLE `users` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `users`
+-- Data for table `users`
 --
 
 LOCK TABLES `users` WRITE;
@@ -120,5 +120,3 @@ UNLOCK TABLES;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
--- Dump completed on 2026-02-18 23:12:17

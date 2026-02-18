@@ -73,35 +73,34 @@ URL: `http://localhost/ISIT307-A2/`
 
 ```
 ISIT307-A2/
-├── classes/                    # OOP Classes
-│   ├── Database.php            # Database connection (Singleton pattern)
-│   ├── User.php                # User management and authentication
-│   ├── Motorbike.php           # Motorbike CRUD operations
-│   ├── Rental.php              # Rental operations and cost calculation
-│   └── Auth.php                # Authentication and authorization helper
-├── includes/                   # Reusable components
-│   ├── header.php              # Page header with branding
-│   ├── nav.php                 # Dynamic navigation menu (role-based)
-│   └── footer.php              # Page footer
-├── assets/                     # Static resources
+├── classes/
+│   ├── Database.php         # Database connection (Singleton)
+│   ├── User.php             # User management
+│   ├── Motorbike.php        # Motorbike operations
+│   ├── Rental.php           # Rental operations
+│   └── Auth.php             # Authentication helper
+├── includes/
+│   ├── header.php           # Page header
+│   ├── nav.php              # Navigation menu
+│   └── footer.php           # Page footer
+├── assets/
 │   └── css/
-│       └── style.css           # Application styles and responsive design
-├── index.php                   # Entry point (redirects to login)
-├── login.php                   # User authentication page
-├── register.php                # New user registration
-├── dashboard.php               # Main dashboard (role-based content)
-├── logout.php                  # Session termination
-├── motorbikes_list.php         # List/search motorbikes (with filters for admin)
-├── motorbike_form.php          # Add/edit/delete motorbikes (admin only)
-├── rent.php                    # Rent motorbikes (with user selection for admin)
-├── return.php                  # Return motorbikes and view active rentals
-├── rentals_history.php         # View completed rentals (user only)
-├── users_list.php              # List/search users (admin only)
-├── create_database.php         # Automated database setup script
-├── motocity.sql                # SQL database dump for manual import
-├── README.md                   # Project documentation
-├── PROJECT_REPORT.md           # Comprehensive project report with user manual
-└── .gitignore                  # Git ignore rules
+│       └── style.css        # Application styles
+├── index.php                # Entry point (redirects to login)
+├── login.php                # Login page
+├── register.php             # Registration page
+├── dashboard.php            # User dashboard
+├── logout.php               # Logout handler
+├── motorbikes_list.php      # List/search motorbikes
+├── motorbike_form.php       # Add/edit motorbikes (admin)
+├── rent.php                 # Rent motorbikes
+├── return.php               # Return motorbikes
+├── rentals_history.php      # View completed rentals
+├── users_list.php           # List/search users (admin)
+├── create_database.php      # Database setup script
+├── motocity.sql             # SQL database dump
+├── README.md                # Project documentation
+└── PROJECT_REPORT.md        # Full project report
 ```
 
 ## 💡 Key Features

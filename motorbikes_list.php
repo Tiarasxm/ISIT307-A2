@@ -62,6 +62,12 @@ if ($isSearching) {
     <main class="container">
         <h2><?php echo $listTitle; ?></h2>
         
+        <?php if (isset($_GET['deleted'])): ?>
+            <div class="message success">
+                Motorbike deleted successfully!
+            </div>
+        <?php endif; ?>
+        
         <!-- Search Form -->
         <div class="card">
             <h3>Search Motorbikes</h3>

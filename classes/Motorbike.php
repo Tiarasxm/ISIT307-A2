@@ -54,6 +54,28 @@ class Motorbike {
         return "Failed to update motorbike: " . $stmt->error;
     }
     
+    public function delete($code) {
+        // Check if motorbike has any rentals (active or completed)
+        $stmt = $this->conn->prepare("SELECT COUNT(*) as count FROM rentals WHERE motorbikeCode = ?");
+        $stmt->bind_param("s", $code);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $row = $result->fetch_assoc();
+        
+        if ($row['count'] > 0) {
+            return "Cannot delete motorbike with existing rental records";
+        }
+        
+        // Delete the motorbike
+        $stmt = $this->conn->prepare("DELETE FROM motorbikes WHERE code = ?");
+        $stmt->bind_param("s", $code);
+        
+        if ($stmt->execute()) {
+            return true;
+        }
+        return "Failed to delete motorbike: " . $stmt->error;
+    }
+    
     public function getByCode($code) {
         $stmt = $this->conn->prepare("SELECT * FROM motorbikes WHERE code = ?");
         $stmt->bind_param("s", $code);

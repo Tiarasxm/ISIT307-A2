@@ -30,6 +30,19 @@ if (isset($_GET['code'])) {
     }
 }
 
+// Handle delete
+if (isset($_GET['delete']) && isset($_GET['code'])) {
+    $motorbike = new Motorbike();
+    $result = $motorbike->delete($_GET['code']);
+    
+    if ($result === true) {
+        header('Location: motorbikes_list.php?deleted=1');
+        exit;
+    } else {
+        $errors[] = $result;
+    }
+}
+
 // Handle form submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $code = trim($_POST['code'] ?? '');
@@ -138,6 +151,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="form-group">
                     <button type="submit" class="btn"><?php echo $isEdit ? 'Update' : 'Add'; ?> Motorbike</button>
                     <a href="motorbikes_list.php" class="btn btn-secondary">Cancel</a>
+                    <?php if ($isEdit): ?>
+                        <a href="motorbike_form.php?code=<?php echo urlencode($code); ?>&delete=1" 
+                           class="btn" 
+                           style="background-color: #dc3545; float: right;"
+                           onclick="return confirm('Are you sure you want to delete this motorbike? This action cannot be undone.');">
+                            Delete Motorbike
+                        </a>
+                    <?php endif; ?>
                 </div>
             </form>
         <?php endif; ?>
